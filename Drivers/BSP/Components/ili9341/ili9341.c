@@ -199,6 +199,16 @@ void ili9341_Init(void)
 	  ili9341_WriteReg(LCD_GRAM);
 	  LCD_Delay(200);
 
+	  ili9341_WriteReg(LCD_BACKLIGHT1);
+	  ili9341_WriteData(0x00);
+	  ili9341_WriteReg(LCD_BACKLIGHT2);
+	  ili9341_WriteData(0x00);
+	  ili9341_WriteReg(LCD_BACKLIGHT3);
+	  ili9341_WriteData(0x00);
+
+	  ili9341_WriteReg(LCD_WDB);
+	  ili9341_WriteData(0xFF);
+
 	  ili9341_WriteReg(LCD_GAMMA);
 	  ili9341_WriteData(0x01);
 

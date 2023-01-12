@@ -67,8 +67,16 @@ void Error_Handler(void);
 #define BEEP_ON_GPIO_Port GPIOA
 #define LCD_DC_Pin GPIO_PIN_11
 #define LCD_DC_GPIO_Port GPIOI
+#define POWER_SW_Pin GPIO_PIN_0
+#define POWER_SW_GPIO_Port GPIOC
+#define RESET_SW_Pin GPIO_PIN_3
+#define RESET_SW_GPIO_Port GPIOC
+#define SPI1_CS1_Pin GPIO_PIN_4
+#define SPI1_CS1_GPIO_Port GPIOA
 #define LCD_RST_Pin GPIO_PIN_7
 #define LCD_RST_GPIO_Port GPIOH
+#define SD_DETECT_Pin GPIO_PIN_12
+#define SD_DETECT_GPIO_Port GPIOB
 #define SPI1_CS_Pin GPIO_PIN_3
 #define SPI1_CS_GPIO_Port GPIOA
 #define MCU_LED_Pin GPIO_PIN_10

@@ -6,6 +6,8 @@
 #include "tim.h"
 #include "ili9341.h"
 #include "SysParam.h"
+#include "rtc.h"
+#include "ads8321.h"
 
 #define NUM_TIMERS 2
 
@@ -16,11 +18,15 @@ typedef enum BuzzerState_t
 	IS_NOT_TOUCHED,
 }BuzzerState_t;
 
+
 static uint32_t TouchedCount;
 
 static BuzzerState_t BuzzerState;
 
 TimerHandle_t xTimers[ NUM_TIMERS ];
+
+
+static void RTC_Test(void);
 
 static uint32_t GetLcdOnTimeTick(void);
 static void Check_LCD_OnOff(void);
@@ -28,6 +34,10 @@ static void BuzzerAction(void);
 static uint8_t IsTouched(void);
 void vTimerCallback( TimerHandle_t xTimer );
 
+uint8_t pwrSW = 0;
+uint8_t rstSW = 0;
+int16_t ads8321Value;
+float ads8321Volt;
 void System_Task(void *argument)
 {
   /* USER CODE BEGIN System_Task */
@@ -40,15 +50,28 @@ void System_Task(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
-
-		//Buzzer_On();
-		//osDelay(50);
-		//Buzzer_Off();
-
-		osDelay(1);
+		/*
+		HAL_GPIO_WritePin(GPIOC, POWER_SW_Pin, pwrSW);
+		HAL_GPIO_WritePin(GPIOC, RESET_SW_Pin, rstSW);
+		RTC_Test();
+		MX_USART1_WriteBytes("test\r\n",6);
+		MX_USART4_WriteBytes("test\r\n",6);
+		*/
+		ads8321Value = ADS8321_Read();
+		ads8321Volt = ADS8321_ReadVolt();
+		osDelay(10);
 	}
   /* USER CODE END System_Task */
 }
+
+uint8_t timeStr[20];
+uint8_t dateStr[20];
+static void RTC_Test(void)
+{
+	RTC_CalendarShow(timeStr,dateStr);
+}
+
+
 
 static uint8_t IsTouched(void)
 {
@@ -127,7 +150,7 @@ static void BuzzerAction(void)
 	case IS_TOUCHED :
 		if(TSC2007_DetectTouch())
 		{
-			if(TouchedCount++ > 2)
+			if(TouchedCount++ > 0)
 			{
 				TouchedCount = 0;
 				BuzzerState = BUZZER_ON;
@@ -137,7 +160,7 @@ static void BuzzerAction(void)
 		else TouchedCount = 0;
 		break;
 	case BUZZER_ON :
-		if(TouchedCount++ > 5)
+		if(TouchedCount++ > 4)
 		{
 			TouchedCount = 0;
 			BuzzerState = IS_NOT_TOUCHED;
@@ -147,7 +170,7 @@ static void BuzzerAction(void)
 	case IS_NOT_TOUCHED :
 		if(!TSC2007_DetectTouch())
 		{
-			if(TouchedCount++ > 5)
+			if(TouchedCount++ > 4)
 			{
 				BuzzerState = IS_TOUCHED;
 			}

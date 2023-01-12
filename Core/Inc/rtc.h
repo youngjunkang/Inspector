@@ -1,13 +1,13 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    usart.h
+  * @file    rtc.h
   * @brief   This file contains all the function prototypes for
-  *          the usart.c file
+  *          the rtc.c file
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -18,8 +18,8 @@
   */
 /* USER CODE END Header */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USART_H__
-#define __USART_H__
+#ifndef __RTC_H__
+#define __RTC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,32 +32,21 @@ extern "C" {
 
 /* USER CODE END Includes */
 
-extern UART_HandleTypeDef huart4;
-
-extern UART_HandleTypeDef huart1;
-
-extern UART_HandleTypeDef huart2;
+extern RTC_HandleTypeDef hrtc;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void MX_UART4_Init(void);
-void MX_USART1_UART_Init(void);
-void MX_USART2_UART_Init(void);
+void MX_RTC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void MX_USART1_WriteBytes(uint8_t* data,uint8_t size);
-void MX_USART2_WriteBytes(uint8_t* data,uint8_t size);
-void MX_USART4_WriteBytes(uint8_t* data,uint8_t size);
-uint8_t MX_USART2_GetByte(void);
-uint8_t MX_USART2_GetRxSize(void);
-uint8_t MX_USART2_GetRxBusyFlag(void);
+void RTC_CalendarShow(uint8_t* showtime, uint8_t* showdate);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __USART_H__ */
+#endif /* __RTC_H__ */
 

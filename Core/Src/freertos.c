@@ -61,14 +61,15 @@ const osThreadAttr_t GUI_Task_attributes = {
   .stack_size = 8192 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+
+/* Private function prototypes -----------------------------------------------*/
+/* USER CODE BEGIN FunctionPrototypes */
 /* Definitions for GuiTaskMBox */
 osMessageQueueId_t GuiTaskMBoxHandle;
 const osMessageQueueAttr_t GuiTaskMBox_attributes = {
   .name = "GuiTaskMBox"
 };
 
-/* Private function prototypes -----------------------------------------------*/
-/* USER CODE BEGIN FunctionPrototypes */
 extern void TouchGFX_Task(void *argument);
 /* USER CODE END FunctionPrototypes */
 
@@ -99,12 +100,9 @@ void MX_FREERTOS_Init(void) {
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
-  /* Create the queue(s) */
-  /* creation of GuiTaskMBox */
-  GuiTaskMBoxHandle = osMessageQueueNew (16, sizeof(GuiMessage_t), &GuiTaskMBox_attributes);
-
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
+  GuiTaskMBoxHandle = osMessageQueueNew (16, sizeof(GuiMessage_t), &GuiTaskMBox_attributes);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
