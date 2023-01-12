@@ -25,7 +25,6 @@
 #include <touchgfx/hal/OSWrappers.hpp>
 #include "ili9341.h"
 
-
 using namespace touchgfx;
 
 LOCATION_PRAGMA("TouchGFX_Framebuffer")

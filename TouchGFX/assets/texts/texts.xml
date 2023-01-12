@@ -4,10 +4,179 @@
     <Language Id="GB" />
   </Languages>
   <Texts>
-    <TextGroup Id="Group1" />
+    <TextGroup Id="Group_setting">
+      <Text Id="SETTING_1" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Setting</Translation>
+      </Text>
+      <Text Id="SETTING_2" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">LCD OnTime :</Translation>
+      </Text>
+      <Text Id="SETTING_3" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">Buzzer Use :</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Group_process">
+      <Text Id="PROCESS_1" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Process Check</Translation>
+      </Text>
+      <Text Id="PROCESS_2" Alignment="Center" TypographyId="RobotoRegular16">
+        <Translation Language="GB">CPU Usage</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Group_util">
+      <Text Id="UTIL_1" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">CPU &amp; Memory &amp; Disk</Translation>
+      </Text>
+      <Text Id="UTIL_2" Alignment="Center" TypographyId="RobotoRegular12">
+        <Translation Language="GB">CPU Usage</Translation>
+      </Text>
+      <Text Id="UTIL_3" Alignment="Center" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Memory</Translation>
+      </Text>
+      <Text Id="UTIL_4" Alignment="Center" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Disk</Translation>
+      </Text>
+      <Text Id="UTIL_5" Alignment="Center" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Total CPU</Translation>
+      </Text>
+      <Text Id="UTIL_6" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">Core</Translation>
+      </Text>
+      <Text Id="UTIL_7" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Total Memory</Translation>
+      </Text>
+      <Text Id="UTIL_8" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">GiB</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Group_storage">
+      <Text Id="STORAGE_1" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Storage usage</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Group_network">
+      <Text Id="NETWORK_1" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">Network Interface</Translation>
+      </Text>
+      <Text Id="NETWORK_2" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">NAME</Translation>
+      </Text>
+      <Text Id="NETWORK_3" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">IP</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Group_info">
+      <Text Id="INFO_1" Alignment="Left" TypographyId="RobotoRegular24">
+        <Translation Language="GB">Information</Translation>
+      </Text>
+      <Text Id="INFO_2" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">device serial number : &lt;value&gt;</Translation>
+      </Text>
+      <Text Id="INFO_3" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">device model name : &lt;value&gt;</Translation>
+      </Text>
+      <Text Id="INFO_4" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">device admin name : &lt;value&gt;</Translation>
+      </Text>
+      <Text Id="INFO_5" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">device group : &lt;value&gt;</Translation>
+      </Text>
+    </TextGroup>
+    <TextGroup Id="Group_gnb">
+      <Text Id="GNB_1" Alignment="Left" TypographyId="RobotoRegular24">
+        <Translation Language="GB">GNB</Translation>
+      </Text>
+      <Text Id="GNB_2" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">CPU &amp; Memory &amp; Disk</Translation>
+      </Text>
+      <Text Id="GNB_3" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">Network Interface</Translation>
+      </Text>
+      <Text Id="GNB_4" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">Storage usage</Translation>
+      </Text>
+      <Text Id="GNB_5" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">Process Check</Translation>
+      </Text>
+      <Text Id="GNB_6" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB">Setting</Translation>
+      </Text>
+    </TextGroup>
     <TextGroup Id="Unsorted">
-      <Text Id="__SingleUse_2SSF" Alignment="Left" TypographyId="Default">
-        <Translation Language="GB">New Text</Translation>
+      <Text Id="__SingleUse_73GG" Alignment="Center" TypographyId="RobotoRegular16">
+        <Translation Language="GB">SAVE</Translation>
+      </Text>
+      <Text Id="__SingleUse_1FJ5" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB" />
+      </Text>
+      <Text Id="__SingleUse_96RY" Alignment="Center" TypographyId="RobotoRegular16">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_XJWN" Alignment="Left" TypographyId="RobotoRegular16">
+        <Translation Language="GB" />
+      </Text>
+      <Text Id="__SingleUse_XZ8S" Alignment="Center" TypographyId="RobotoRegular16">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_V6N5" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">100</Translation>
+      </Text>
+      <Text Id="__SingleUse_O99B" Alignment="Center" TypographyId="RobotoRegular19">
+        <Translation Language="GB">&lt;value&gt;%</Translation>
+      </Text>
+      <Text Id="__SingleUse_7NT4" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">100</Translation>
+      </Text>
+      <Text Id="__SingleUse_23DK" Alignment="Right" TypographyId="RobotoRegular12">
+        <Translation Language="GB">&lt;value&gt;%</Translation>
+      </Text>
+      <Text Id="__SingleUse_UFBN" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">process Name</Translation>
+      </Text>
+      <Text Id="__SingleUse_M97C" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_X59B" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">50</Translation>
+      </Text>
+      <Text Id="__SingleUse_BGTI" Alignment="Center" TypographyId="RobotoRegular12">
+        <Translation Language="GB">&lt;value&gt;%</Translation>
+      </Text>
+      <Text Id="__SingleUse_HHKZ" Alignment="Left" TypographyId="RobotoRegular30">
+        <Translation Language="GB">15.4</Translation>
+      </Text>
+      <Text Id="__SingleUse_RNE5" Alignment="Center" TypographyId="RobotoRegular30">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_L9ME" Alignment="Left" TypographyId="RobotoRegular30">
+        <Translation Language="GB">12</Translation>
+      </Text>
+      <Text Id="__SingleUse_I7JC" Alignment="Center" TypographyId="RobotoRegular30">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_1I8Q" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">50</Translation>
+      </Text>
+      <Text Id="__SingleUse_RBTE" Alignment="Center" TypographyId="RobotoRegular12">
+        <Translation Language="GB">&lt;value&gt;%</Translation>
+      </Text>
+      <Text Id="__SingleUse_C9VH" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">C:</Translation>
+      </Text>
+      <Text Id="__SingleUse_9L37" Alignment="Center" TypographyId="RobotoRegular12">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_8K01" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">IP ADDRESS</Translation>
+      </Text>
+      <Text Id="__SingleUse_8LKB" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">NAME</Translation>
+      </Text>
+      <Text Id="__SingleUse_6RJJ" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">&lt;value&gt;</Translation>
+      </Text>
+      <Text Id="__SingleUse_68HG" Alignment="Left" TypographyId="RobotoRegular12">
+        <Translation Language="GB">&lt;value&gt;</Translation>
       </Text>
     </TextGroup>
   </Texts>
@@ -15,5 +184,10 @@
     <Typography Id="Default" Font="verdana.ttf" Size="20" Bpp="4" Direction="LTR" FallbackCharacter="?" />
     <Typography Id="Large" Font="verdana.ttf" Size="40" Bpp="4" Direction="LTR" FallbackCharacter="?" />
     <Typography Id="Small" Font="verdana.ttf" Size="10" Bpp="4" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="RobotoRegular24" Font="Roboto-Regular.ttf" Size="24" Bpp="4" Direction="LTR" FallbackCharacter="?" />
+    <Typography Id="RobotoRegular16" Font="Roboto-Regular.ttf" Size="16" Bpp="4" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="!-~" />
+    <Typography Id="RobotoRegular12" Font="Roboto-Regular.ttf" Size="12" Bpp="4" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="!-~" />
+    <Typography Id="RobotoRegular30" Font="Roboto-Regular.ttf" Size="30" Bpp="4" Direction="LTR" FallbackCharacter="?" WildcardCharacters="." WildcardCharacterRanges="0-9" />
+    <Typography Id="RobotoRegular19" Font="Roboto-Regular.ttf" Size="19" Bpp="4" Direction="LTR" FallbackCharacter="?" WildcardCharacterRanges="0-9" />
   </Typographies>
 </TextDatabase>

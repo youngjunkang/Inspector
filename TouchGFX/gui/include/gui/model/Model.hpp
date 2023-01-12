@@ -14,8 +14,13 @@ public:
     }
 
     void tick();
+    void UpdateSysParam();
+
+    unsigned char buzzerUse;
+    unsigned char lcdOnTime;
 protected:
     ModelListener* modelListener;
+
 };
 
 #endif // MODEL_HPP

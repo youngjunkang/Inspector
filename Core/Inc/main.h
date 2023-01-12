@@ -71,6 +71,8 @@ void Error_Handler(void);
 #define LCD_RST_GPIO_Port GPIOH
 #define SPI1_CS_Pin GPIO_PIN_3
 #define SPI1_CS_GPIO_Port GPIOA
+#define MCU_LED_Pin GPIO_PIN_10
+#define MCU_LED_GPIO_Port GPIOB
 #define TOUCH_SCREEN_INT_Pin GPIO_PIN_11
 #define TOUCH_SCREEN_INT_GPIO_Port GPIOB
 #define LCD_POWER_Pin GPIO_PIN_14
@@ -78,7 +80,10 @@ void Error_Handler(void);
 #define LCD_BACKLIGHT_Pin GPIO_PIN_15
 #define LCD_BACKLIGHT_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define true    1
+#define false   0
+#define TRUE    1
+#define FALSE   0
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

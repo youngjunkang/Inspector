@@ -36,3 +36,11 @@ generated
 
 # folders
 Debug
+simulator
+TouchGFX/build
+
+# image File
+*.png
+
+# font File
+*.ttf

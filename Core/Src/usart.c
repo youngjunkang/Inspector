@@ -21,6 +21,15 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "Que.h"
+
+#define UART2_RX_BUSY_TICK	(3)
+
+static uint8_t UART2_RxBusyFlag;
+static uint8_t UART2_RxBusyTick;
+
+static uint8_t rx_data;
+static Que_t uart2_rxQue;
 
 /* USER CODE END 0 */
 
@@ -51,7 +60,9 @@ void MX_USART2_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART2_Init 2 */
-
+  Que_Clear(&uart2_rxQue);
+  UART2_RxBusyFlag = 0;
+  HAL_UART_Receive_IT(&huart2, &rx_data, 1);
   /* USER CODE END USART2_Init 2 */
 
 }
@@ -115,5 +126,47 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void MX_USART2_WriteBytes(uint8_t* data,uint8_t size)
+{
+	HAL_UART_Transmit_IT(&huart2, data, size);
+}
 
+uint8_t MX_USART2_GetRxSize(void)
+{
+    return Que_GetSize(&uart2_rxQue);
+}
+
+uint8_t MX_USART2_GetByte(void)
+{
+    uint8_t buf;
+
+    Que_GetByte(&uart2_rxQue,&buf);
+
+    return buf;
+}
+
+uint8_t MX_USART2_GetRxBusyFlag(void)
+{
+	if(UART2_RxBusyFlag)
+	{
+		if(UART2_RxBusyTick-- == 0)
+		{
+			UART2_RxBusyFlag = 0;
+		}
+	}
+
+	return UART2_RxBusyFlag;
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *uartHandle)
+{
+	if(uartHandle->Instance==USART2)
+	{
+		HAL_UART_Receive_IT(uartHandle, &rx_data, 1);
+		Que_PutByte(&uart2_rxQue,rx_data);
+		UART2_RxBusyTick = UART2_RX_BUSY_TICK;
+		UART2_RxBusyFlag = 1;
+	}
+}
 /* USER CODE END 1 */

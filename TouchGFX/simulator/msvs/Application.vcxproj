@@ -20,10 +20,41 @@
     <ClCompile Include="..\..\gui\src\common\FrontendApplication.cpp"/>
     <ClCompile Include="..\..\generated\gui_generated\src\common\FrontendApplicationBase.cpp"/>
     <ClCompile Include="..\..\gui\src\model\Model.cpp"/>
-    <ClCompile Include="..\..\gui\src\screen_screen\screenPresenter.cpp"/>
-    <ClCompile Include="..\..\gui\src\screen_screen\screenView.cpp"/>
-    <ClCompile Include="..\..\generated\gui_generated\src\screen_screen\screenViewBase.cpp"/>
     <ClCompile Include="..\..\generated\simulator\src\video\SoftwareMJPEGDecoder.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_gnb_screen\screen_gnbPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_gnb_screen\screen_gnbView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_gnb_screen\screen_gnbViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_info_screen\screen_infoPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_info_screen\screen_infoView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_info_screen\screen_infoViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_logo_screen\screen_logoPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_logo_screen\screen_logoView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_logo_screen\screen_logoViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_network_screen\screen_networkPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_network_screen\screen_networkView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_network_screen\screen_networkViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_process_screen\screen_processPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_process_screen\screen_processView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_process_screen\screen_processViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_storage_screen\screen_storagePresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_storage_screen\screen_storageView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_storage_screen\screen_storageViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_util_rate_screen\screen_util_ratePresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_util_rate_screen\screen_util_rateView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_util_rate_screen\screen_util_rateViewBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\containers\CustomContainer_storage_list.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\containers\CustomContainer_storage_listBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\containers\CustomContainer_network_list.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\containers\CustomContainer_network_listBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\containers\CustomContainer_big_size_usage.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\containers\CustomContainer_big_size_usageBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\containers\CustomContainer_process_check.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\containers\CustomContainer_process_checkBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\containers\CustomContainer_usage.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\containers\CustomContainer_usageBase.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_setting_screen\screen_settingPresenter.cpp"/>
+    <ClCompile Include="..\..\gui\src\screen_setting_screen\screen_settingView.cpp"/>
+    <ClCompile Include="..\..\generated\gui_generated\src\screen_setting_screen\screen_settingViewBase.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(ApplicationRoot)\assets\texts\texts.xml"/>
@@ -172,11 +203,42 @@
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\MJPEGDecoder.hpp"/>
     <ClInclude Include="..\..\gui\include\gui\model\Model.hpp"/>
     <ClInclude Include="..\..\gui\include\gui\model\ModelListener.hpp"/>
-    <ClInclude Include="..\..\gui\include\gui\screen_screen\screenPresenter.hpp"/>
-    <ClInclude Include="..\..\gui\include\gui\screen_screen\screenView.hpp"/>
-    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_screen\screenViewBase.hpp"/>
     <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\common\SimConstants.hpp"/>
     <ClInclude Include="..\..\generated\simulator\include\simulator\video\SoftwareMJPEGDecoder.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_gnb_screen\screen_gnbPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_gnb_screen\screen_gnbView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_gnb_screen\screen_gnbViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_info_screen\screen_infoPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_info_screen\screen_infoView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_info_screen\screen_infoViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_logo_screen\screen_logoPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_logo_screen\screen_logoView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_logo_screen\screen_logoViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_network_screen\screen_networkPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_network_screen\screen_networkView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_network_screen\screen_networkViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_process_screen\screen_processPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_process_screen\screen_processView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_process_screen\screen_processViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_storage_screen\screen_storagePresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_storage_screen\screen_storageView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_storage_screen\screen_storageViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_util_rate_screen\screen_util_ratePresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_util_rate_screen\screen_util_rateView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_util_rate_screen\screen_util_rateViewBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\containers\CustomContainer_storage_list.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\CustomContainer_storage_listBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\containers\CustomContainer_network_list.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\CustomContainer_network_listBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\containers\CustomContainer_big_size_usage.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\CustomContainer_big_size_usageBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\containers\CustomContainer_process_check.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\CustomContainer_process_checkBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\containers\CustomContainer_usage.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\containers\CustomContainer_usageBase.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_setting_screen\screen_settingPresenter.hpp"/>
+    <ClInclude Include="..\..\gui\include\gui\screen_setting_screen\screen_settingView.hpp"/>
+    <ClInclude Include="..\..\generated\gui_generated\include\gui_generated\screen_setting_screen\screen_settingViewBase.hpp"/>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="$(ApplicationRoot)\generated\simulator\touchgfx.rc"/>
@@ -185,19 +247,21 @@
     <ProjectGuid>{3C47683C-0505-487F-A1FD-75B8490BF72C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Application</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <ImportGroup Label="ExtensionSettings">
