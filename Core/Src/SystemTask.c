@@ -8,6 +8,7 @@
 #include "SysParam.h"
 #include "rtc.h"
 #include "ads8321.h"
+#include "bsp_driver_sd.h"
 
 #define NUM_TIMERS 2
 
@@ -38,6 +39,9 @@ uint8_t pwrSW = 0;
 uint8_t rstSW = 0;
 int16_t ads8321Value;
 float ads8321Volt;
+
+//uint8_t sdBuffer[256];
+
 void System_Task(void *argument)
 {
   /* USER CODE BEGIN System_Task */
@@ -47,6 +51,20 @@ void System_Task(void *argument)
 	xTimerStart( xTimers[0], 0 );
 	xTimerStart( xTimers[1], 0 );
 
+	//BSP_SD_Init();
+	/*
+	BSP_SD_Erase(0,256);
+
+	for(int i=0; i<256; i++)
+		sdBuffer[i] = i;
+
+	BSP_SD_WriteBlocks(sdBuffer,0,1,100);
+
+	for(int i=0; i<256; i++)
+		sdBuffer[i] = 0;
+
+	BSP_SD_ReadBlocks(sdBuffer,0,1,100);
+*/
 	/* Infinite loop */
 	for(;;)
 	{
@@ -57,9 +75,30 @@ void System_Task(void *argument)
 		MX_USART1_WriteBytes("test\r\n",6);
 		MX_USART4_WriteBytes("test\r\n",6);
 		*/
+		if(!HAL_GPIO_ReadPin(RESET_SW_GPIO_Port,RESET_SW_Pin))
+		{
+			HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 1);
+			HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 0);
+			HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 0);
+			osDelay(200);
+			HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 0);
+			HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 1);
+			HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 0);
+			osDelay(200);
+			HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 0);
+			HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 0);
+			HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 1);
+			osDelay(200);
+			HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 0);
+			HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 0);
+			HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 0);
+		}
+
+		HAL_GPIO_TogglePin(MCU_LED_GPIO_Port,MCU_LED_Pin);
+
 		ads8321Value = ADS8321_Read();
 		ads8321Volt = ADS8321_ReadVolt();
-		osDelay(10);
+		osDelay(100);
 	}
   /* USER CODE END System_Task */
 }
