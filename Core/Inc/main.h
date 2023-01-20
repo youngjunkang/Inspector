@@ -100,6 +100,16 @@ void Error_Handler(void);
 #define false   0
 #define TRUE    1
 #define FALSE   0
+
+#define	WORDSIZEOF(x)	(sizeof(x))
+#define	BYTESIZEOF(x)	(sizeof(x)<<1)
+#define	LOBYTE(w)		((w) & 0x00FF)
+#define	HIBYTE(w)		(LOBYTE((w)>>8))
+#define MAKEWORD(h, l)	((uint16_t)(((h) & 0x00ff)<<8) | (uint16_t)((l) & 0x00ff))
+#define MAKEBYTE(h, l)	((uint16_t)(((h) & 0x000f)<<4) | (uint16_t)((l) & 0x000f))
+
+#define RANGE_CONTAIN(var, minval, maxval)  (( (minval <= var) && (var <= maxval) ) ? true : false)
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

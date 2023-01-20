@@ -299,6 +299,11 @@ void MX_USART4_WriteBytes(uint8_t* data,uint8_t size)
 	HAL_UART_Transmit_IT(&huart4, data, size);
 }
 
+void MX_USART2_ClearBuf(void)
+{
+	Que_Clear(&uart2_rxQue);
+}
+
 uint8_t MX_USART2_GetRxSize(void)
 {
     return Que_GetSize(&uart2_rxQue);

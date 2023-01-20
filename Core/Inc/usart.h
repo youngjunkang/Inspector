@@ -51,6 +51,7 @@ void MX_USART1_WriteBytes(uint8_t* data,uint8_t size);
 void MX_USART2_WriteBytes(uint8_t* data,uint8_t size);
 void MX_USART4_WriteBytes(uint8_t* data,uint8_t size);
 uint8_t MX_USART2_GetByte(void);
+void MX_USART2_ClearBuf(void);
 uint8_t MX_USART2_GetRxSize(void);
 uint8_t MX_USART2_GetRxBusyFlag(void);
 /* USER CODE END Prototypes */

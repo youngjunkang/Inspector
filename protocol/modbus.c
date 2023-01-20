@@ -2,328 +2,174 @@
     #include "modbus.h"
 #undef  __MODBUS_C__
 
-#include <string.h>
-#include "usart.h"
+#include "AppData.h"
+#include "modbusMap.h"
 
-#define DELAY_MS(ms)     vTaskDelay(ms)
-#define GET_TICK()		 xTaskGetTickCount()
-#define SEND_DELAY_TIME (0)
-#define TIMEOUT         (200)
+extern AppData_t AppData;
 
-#define RECV_BUF_SIZE_MAX       (256)
+static uint8_t MakeExceptionPacket(uint8_t* buffer,uint8_t code);
+static uint8_t ReadInputRegisters(uint8_t* buffer);
+static uint8_t ReadHoldingRegisters(uint8_t* buffer);
+static uint8_t WriteSingleRegister(uint8_t* buffer);
+static uint8_t WriteMultipleRegisters(uint8_t* buffer);
 
-typedef enum MODBUS_FuncCode
+static uint16_t HoldingReg[HOLDING_REG_COUNT];
+//static uint16_t InputReg[INPUT_REG_COUNT];
+
+void ModbusSlave_Init(void)
 {
-FuncCode_ReadDiscreteInputs         = 2,
-FuncCode_ReadCoils                  = 1,
-FuncCode_WriteSingleCoil            = 5,
-FuncCode_WriteMultipleCoils         = 15,
-FuncCode_ReadInputRegister          = 4,
-FuncCode_ReadHoldingRegisters       = 3,
-FuncCode_WriteSingleRegister        = 6,
-FuncCode_WriteMultipleRegisters     = 16,
-FuncCode_ReadWriteMultipleRegisters = 23,
-}MODBUS_FuncCode_t;
-
-typedef enum MODBUS_ExceptionCode
-{
-MODBUS_ILLEGAL_FUNCTION = 1,
-MODBUS_ILLEGAL_DATA_ADDRESS = 2,
-MODBUS_ILLEGAL_DATA_VALUE = 3,
-MODBUS_SLAVE_DEVICE_FAILURE = 4,
-MODBUS_ACKNOWLEDGE = 5,
-MODBUS_SLAVE_DEVICE_BUSY = 6,
-MODBUS_MEMORY_PARITY_ERROR = 8,
-MODBUS_GATEWAY_PATH_UNAVAILABLE = 0x0A,
-MODBUS_GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND = 0x0B,
-}MODBUS_ExceptionCode_t;
-
-static uint8_t ReadHoldingRegisters(uint8_t* data);
-static uint8_t WriteMultipleRegisters(uint8_t* data);
-
-static uint16_t crc16(uint8_t *buffer, uint16_t buffer_length);
-static uint8_t CheckCRC(uint8_t* data,uint16_t size);
-static uint8_t ExecuteFunc(uint8_t* data,uint16_t size);
-static uint8_t MasterReadRoutine(uint16_t id);
-
-/* Table of CRC values for high-order byte */
-static const uint8_t table_crc_hi[] = {
-    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
-    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
-    0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
-    0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
-    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
-    0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41,
-    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
-    0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
-    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
-    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
-    0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
-    0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
-    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
-    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
-    0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
-    0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
-    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
-    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
-    0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
-    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
-    0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
-    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
-    0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
-    0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
-    0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
-    0x80, 0x41, 0x00, 0xC1, 0x81, 0x40
-};
-
-/* Table of CRC values for low-order byte */
-static const uint8_t table_crc_lo[] = {
-    0x00, 0xC0, 0xC1, 0x01, 0xC3, 0x03, 0x02, 0xC2, 0xC6, 0x06,
-    0x07, 0xC7, 0x05, 0xC5, 0xC4, 0x04, 0xCC, 0x0C, 0x0D, 0xCD,
-    0x0F, 0xCF, 0xCE, 0x0E, 0x0A, 0xCA, 0xCB, 0x0B, 0xC9, 0x09,
-    0x08, 0xC8, 0xD8, 0x18, 0x19, 0xD9, 0x1B, 0xDB, 0xDA, 0x1A,
-    0x1E, 0xDE, 0xDF, 0x1F, 0xDD, 0x1D, 0x1C, 0xDC, 0x14, 0xD4,
-    0xD5, 0x15, 0xD7, 0x17, 0x16, 0xD6, 0xD2, 0x12, 0x13, 0xD3,
-    0x11, 0xD1, 0xD0, 0x10, 0xF0, 0x30, 0x31, 0xF1, 0x33, 0xF3,
-    0xF2, 0x32, 0x36, 0xF6, 0xF7, 0x37, 0xF5, 0x35, 0x34, 0xF4,
-    0x3C, 0xFC, 0xFD, 0x3D, 0xFF, 0x3F, 0x3E, 0xFE, 0xFA, 0x3A,
-    0x3B, 0xFB, 0x39, 0xF9, 0xF8, 0x38, 0x28, 0xE8, 0xE9, 0x29,
-    0xEB, 0x2B, 0x2A, 0xEA, 0xEE, 0x2E, 0x2F, 0xEF, 0x2D, 0xED,
-    0xEC, 0x2C, 0xE4, 0x24, 0x25, 0xE5, 0x27, 0xE7, 0xE6, 0x26,
-    0x22, 0xE2, 0xE3, 0x23, 0xE1, 0x21, 0x20, 0xE0, 0xA0, 0x60,
-    0x61, 0xA1, 0x63, 0xA3, 0xA2, 0x62, 0x66, 0xA6, 0xA7, 0x67,
-    0xA5, 0x65, 0x64, 0xA4, 0x6C, 0xAC, 0xAD, 0x6D, 0xAF, 0x6F,
-    0x6E, 0xAE, 0xAA, 0x6A, 0x6B, 0xAB, 0x69, 0xA9, 0xA8, 0x68,
-    0x78, 0xB8, 0xB9, 0x79, 0xBB, 0x7B, 0x7A, 0xBA, 0xBE, 0x7E,
-    0x7F, 0xBF, 0x7D, 0xBD, 0xBC, 0x7C, 0xB4, 0x74, 0x75, 0xB5,
-    0x77, 0xB7, 0xB6, 0x76, 0x72, 0xB2, 0xB3, 0x73, 0xB1, 0x71,
-    0x70, 0xB0, 0x50, 0x90, 0x91, 0x51, 0x93, 0x53, 0x52, 0x92,
-    0x96, 0x56, 0x57, 0x97, 0x55, 0x95, 0x94, 0x54, 0x9C, 0x5C,
-    0x5D, 0x9D, 0x5F, 0x9F, 0x9E, 0x5E, 0x5A, 0x9A, 0x9B, 0x5B,
-    0x99, 0x59, 0x58, 0x98, 0x88, 0x48, 0x49, 0x89, 0x4B, 0x8B,
-    0x8A, 0x4A, 0x4E, 0x8E, 0x8F, 0x4F, 0x8D, 0x4D, 0x4C, 0x8C,
-    0x44, 0x84, 0x85, 0x45, 0x87, 0x47, 0x46, 0x86, 0x82, 0x42,
-    0x43, 0x83, 0x41, 0x81, 0x80, 0x40
-};
-
-static uint16_t Registers[128];
-
-static uint8_t ReceiveBuffer[RECV_BUF_SIZE_MAX];
-static uint8_t WriteBuffer[32];
-
-uint8_t MODBUS_Master_Init(void)
-{
-	ModbusMaster.WriteBytes = MX_USART2_WriteBytes;
-	ModbusMaster.readByte = MX_USART2_GetByte;
-	ModbusMaster.getSize = MX_USART2_GetRxSize;
-	ModbusMaster.isRxBusy = MX_USART2_GetRxBusyFlag;
+    ModbusSlave_UpdateInputRegister   = ModbusMap_UpdateInputRegister;
+    ModbusSlave_UpdateHoldingRegister = ModbusMap_UpdateHoldingRegister;
+    ModbusSlave_WriteHoldingRegister  = ModbusMap_WriteHoldingRegister;
 }
 
-uint8_t MODBUS_Master_ReadHoldingRegistersOverSize(uint16_t id, uint16_t addr, uint16_t *data,uint16_t size)
+uint8_t ModbusSlave_RequestProcessing(uint8_t *buffer)
 {
-	uint8_t ret;
-	uint16_t msize;
-
-	do
-	{
-		if(size > 125) msize = 125;
-		else		   msize = size;
-
-		ret = MODBUS_Master_ReadHodingRegisters(id,addr,data,msize);
-
-		if(ret == 0) return 0;
-
-		addr += msize;
-		data += msize;
-		size -= msize;
-	}while(size);
-
-	return 1;
-}
-
-uint8_t MODBUS_Master_ReadHodingRegisters(uint16_t id, uint16_t addr, uint16_t *data,uint8_t size)
-{
-    uint16_t crc;
-    uint8_t idx = 0;
-    uint32_t tick;
-
-    WriteBuffer[idx++] = id;
-    WriteBuffer[idx++] = FuncCode_ReadHoldingRegisters;
-    WriteBuffer[idx++] = addr>>8;
-    WriteBuffer[idx++] = addr&0xFF;
-    WriteBuffer[idx++] = size>>8;
-    WriteBuffer[idx++] = size&0xFF;
+    uint8_t txSize;
     
-    crc = crc16(WriteBuffer,idx);
-    
-    WriteBuffer[idx++] = crc>>8;
-    WriteBuffer[idx++] = crc&0xFF;
-
-	DELAY_MS(SEND_DELAY_TIME);
-	ModbusMaster.WriteBytes(WriteBuffer,idx);
-
-	tick = GET_TICK();
-	while( (GET_TICK() - tick) < TIMEOUT )
-	{
-		DELAY_MS(1);
-		if((MasterReadRoutine(id)) == 0)
-		{
-			memcpy(data,Registers,size*2);
-
-			return 1;
-		}
-	}
-
-    return 0;
-}
-
-uint8_t MODBUS_Master_WriteMultipleRegisters(uint16_t id, uint16_t addr, uint16_t* data, uint8_t size)
-{
-    uint8_t byteCount = size*2;
-    uint16_t crc;
-    uint8_t idx = 0;
-    uint32_t tick;
-
-        
-    WriteBuffer[idx++] = id;
-    WriteBuffer[idx++] = FuncCode_WriteMultipleRegisters;
-    WriteBuffer[idx++] = addr>>8;
-    WriteBuffer[idx++] = addr&0xFF;
-    WriteBuffer[idx++] = size>>8;
-    WriteBuffer[idx++] = size&0xFF;
-    WriteBuffer[idx++] = byteCount;
-    
-    for(int i=0; i<size; i++)
+    switch(buffer[0])
     {
-        WriteBuffer[idx++] = data[i]>>8;
-        WriteBuffer[idx++] = data[i]&0xFF;
-    }
-    
-    crc = crc16(WriteBuffer,idx);
-    
-    WriteBuffer[idx++] = crc>>8;
-    WriteBuffer[idx++] = crc&0xFF;
-    
-	DELAY_MS(SEND_DELAY_TIME);
-	ModbusMaster.WriteBytes(WriteBuffer,idx);
-
-	tick = GET_TICK();
-	while( (GET_TICK() - tick) < TIMEOUT )
-	{
-		DELAY_MS(1);
-		if(MasterReadRoutine(id) == 0)
-		{
-			return 1;
-		}
-	}
-    
-    return 0;
-}
-
-static uint8_t MasterReadRoutine(uint16_t id)
-{
-    if(ModbusMaster.getSize()==0) return 0x1;
-    if(ModbusMaster.isRxBusy()) return 0x2;
-    
-    uint8_t size = ModbusMaster.getSize();
-
-    if(size < 2) return 0x3;
-    if(size > (RECV_BUF_SIZE_MAX-1) )
-    {
-        for(int i=0; i<size; i++)
-        {
-        	ModbusMaster.readByte();
-        }   
-        
-        return 0x4;
-    }
-       
-    for(int i=0; i<size; i++)
-    {
-        ReceiveBuffer[i] = ModbusMaster.readByte();
-    }
-    
-    if((id == ReceiveBuffer[0])     == 0) return 0x5;
-    if(CheckCRC(ReceiveBuffer,size) == 0) return 0x6;
-    
-    return ExecuteFunc(ReceiveBuffer,size - 2);
-}
-
-static uint8_t ExecuteFunc(uint8_t* data,uint16_t size)
-{
-    uint8_t funcCode = data[1];
-    uint8_t res = 0xFF;
-    
-    switch(funcCode)
-    {
-    case FuncCode_ReadHoldingRegisters   : res = ReadHoldingRegisters(data);   break;
-    case FuncCode_WriteMultipleRegisters : res = WriteMultipleRegisters(data); break;  
+    case FuncCode_ReadInputRegisters     : txSize = ReadInputRegisters(buffer);     break;
+    case FuncCode_ReadHoldingRegisters   : txSize = ReadHoldingRegisters(buffer);   break;
+    case FuncCode_WriteSingleRegister    : txSize = WriteSingleRegister(buffer);    break; 
+    case FuncCode_WriteMultipleRegisters : txSize = WriteMultipleRegisters(buffer); break;  
     default : break;  
     }
     
-    return res;
+    return txSize;
 }
 
-static uint8_t ReadHoldingRegisters(uint8_t* data)
+static uint8_t ReadInputRegisters(uint8_t* buffer)
 {
-    uint8_t  fcode      = data[1];
-    uint8_t  byteCount  = data[2];
+	return MakeExceptionPacket( buffer, ILLEGAL_FUNCTION);
+/*
+    uint8_t  fcode = buffer[0];
+    uint16_t addr  = MAKEWORD(buffer[1], buffer[2]);
+    uint16_t size  = MAKEWORD(buffer[3], buffer[4]);
+    
+    if(fcode != FuncCode_ReadInputRegisters)               
+        return MakeExceptionPacket( buffer, ILLEGAL_FUNCTION);
+    
+    if(RANGE_CONTAIN(size,1,125) == false) 
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_VALUE);
+    
+    if( (RANGE_CONTAIN(addr     , INPUT_REG_BASE_ADDR_BASE, INPUT_REG_BASE_ADDR_END) == false) ||
+        (RANGE_CONTAIN(addr+size, INPUT_REG_BASE_ADDR_BASE, INPUT_REG_BASE_ADDR_END) == false) )
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_ADDRESS);
+    
+    addr -= INPUT_REG_BASE_ADDR_BASE;
+    
+    ModbusSlave_UpdateInputRegister(InputReg);
+    
+    uint8_t idx = 1;
+    uint8_t bc  = size*2;
+    
+    buffer[idx++] = bc;
+    for(int i=0; i<size; i++)
+    {
+        buffer[idx++] = HIBYTE(InputReg[addr + i]);
+        buffer[idx++] = LOBYTE(InputReg[addr + i]);
+    }
+
+    return idx;
+    */
+}
+
+static uint8_t ReadHoldingRegisters(uint8_t* buffer)
+{
+    uint8_t  fcode = buffer[0];
+    uint16_t addr  = MAKEWORD(buffer[1], buffer[2]);
+    uint16_t size  = MAKEWORD(buffer[3], buffer[4]);
     
     if(fcode != FuncCode_ReadHoldingRegisters)               
-        return MODBUS_ILLEGAL_FUNCTION;
-    if( !((0x0001 <= byteCount) || (byteCount <= 0x007D)) ) 
-        return MODBUS_ILLEGAL_DATA_VALUE;
+        return MakeExceptionPacket( buffer, ILLEGAL_FUNCTION);
     
-    for(int i=0; i<byteCount; i+=2)
+    if(RANGE_CONTAIN(size,1,125) == false) 
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_VALUE);
+    
+    if( (RANGE_CONTAIN(addr     , HOLDING_REG_BASE_ADDR_BASE, HOLDING_REG_BASE_ADDR_END) == false) ||
+        (RANGE_CONTAIN(addr+size, HOLDING_REG_BASE_ADDR_BASE, HOLDING_REG_BASE_ADDR_END) == false) )
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_ADDRESS);
+    
+    addr -= HOLDING_REG_BASE_ADDR_BASE;
+
+    ModbusSlave_UpdateHoldingRegister(HoldingReg);
+    
+    uint16_t idx = 1;
+    uint8_t  bc = size*2;
+
+    buffer[idx++] = bc;
+    for(int i=0; i<size; i++)
     {
-    	Registers[i/2]  = data[3 + i]<<8;
-    	Registers[i/2] |= data[4 + i]&0xFF;
+        buffer[idx++] = HIBYTE(HoldingReg[addr + i]);
+        buffer[idx++] = LOBYTE(HoldingReg[addr + i]);
     }
-   
-    return 0;
-}  
 
-static uint8_t WriteMultipleRegisters(uint8_t* data)
+    return idx;
+}
+     
+static uint8_t WriteSingleRegister(uint8_t* buffer)
 {
-    uint8_t  fcode = data[1];
-    uint16_t addr  = (data[2]<<8) | data[3];
-    uint8_t  byteCount  = (data[4]<<8) | data[5];
+    uint8_t  fcode = buffer[0];
+    uint16_t addr  = MAKEWORD(buffer[1], buffer[2]);
+
+    if(fcode != FuncCode_WriteSingleRegister)               
+        return MakeExceptionPacket( buffer, ILLEGAL_FUNCTION);
     
+    if( RANGE_CONTAIN(addr, HOLDING_REG_BASE_ADDR_BASE, HOLDING_REG_BASE_ADDR_END) == false )
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_ADDRESS);
+    
+    addr -= HOLDING_REG_BASE_ADDR_BASE;
+
+    HoldingReg[addr] = MAKEWORD(buffer[3] ,buffer[4]);
+    
+    if(ModbusSlave_WriteHoldingRegister(HoldingReg,addr) == false)
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_VALUE);
+    
+    return 5;
+}
+
+static uint8_t WriteMultipleRegisters(uint8_t* buffer)
+{
+    uint8_t  fcode = buffer[0];
+    uint16_t addr  = MAKEWORD(buffer[1], buffer[2]);
+    uint16_t size  = MAKEWORD(buffer[3], buffer[4]);
+    uint8_t  bc    = buffer[5];
+
     if(fcode != FuncCode_WriteMultipleRegisters)               
-        return MODBUS_ILLEGAL_FUNCTION;
-    if( !((0x0001 <= byteCount) || (byteCount <= 0x007B)) ) 
-        return MODBUS_ILLEGAL_DATA_VALUE;
-
-    return 0;
-}
-
-static uint8_t CheckCRC(uint8_t* data,uint16_t size)
-{
-    uint16_t crc;
-    uint16_t calcCrc;
+        return MakeExceptionPacket( buffer, ILLEGAL_FUNCTION);
     
-    calcCrc = crc16(data,size-2);
-    crc = (data[size-2]<<8) | (data[size-1]);
+    if( (RANGE_CONTAIN(size,1,123) == false) ||
+        (bc != (size*2)) ) 
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_VALUE);
     
-    if(crc == calcCrc) return 1;
-    else               return 0;        
-}
-
-static uint16_t crc16(uint8_t *buffer, uint16_t buffer_length)
-{
-    uint8_t crc_hi = 0xFF; /* high CRC byte initialized */
-    uint8_t crc_lo = 0xFF; /* low CRC byte initialized */
-    unsigned int i; /* will index into CRC lookup */
-
-    /* pass through message buffer */
-    while (buffer_length--) {
-        i = crc_hi ^ *buffer++; /* calculate the CRC  */
-        crc_hi = crc_lo ^ table_crc_hi[i];
-        crc_lo = table_crc_lo[i];
+    if( (RANGE_CONTAIN(addr     , HOLDING_REG_BASE_ADDR_BASE, HOLDING_REG_BASE_ADDR_END) == false) ||
+        (RANGE_CONTAIN(addr+size, HOLDING_REG_BASE_ADDR_BASE, HOLDING_REG_BASE_ADDR_END) == false) )
+        return MakeExceptionPacket( buffer, ILLEGAL_DATA_ADDRESS);
+    
+    addr -= HOLDING_REG_BASE_ADDR_BASE;
+    
+    for(int i=0; i<size; i++)
+    {
+        HoldingReg[addr+i] = MAKEWORD(buffer[6+i*2] ,buffer[7+i*2]);
+    }
+    
+    for(int i=addr; i < addr+size; i++)
+    {
+        if(ModbusSlave_WriteHoldingRegister(HoldingReg,addr) == false)
+            return MakeExceptionPacket( buffer, ILLEGAL_DATA_VALUE);
     }
 
-    return (crc_hi << 8 | crc_lo);
-}       
-       
-       
-       
+    return 5;
+}
+
+static uint8_t MakeExceptionPacket(uint8_t* buffer,uint8_t exCode)
+{
+    uint8_t idx = 0;
+
+    buffer[idx++] |= 0x80;
+    buffer[idx++] = exCode;
+
+    return idx;
+}     
+

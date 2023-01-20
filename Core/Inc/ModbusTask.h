@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include "main.h"
+#include "modbus.h"
 #include "AppData.h"
 
 void Modbus_Task_Init(void);

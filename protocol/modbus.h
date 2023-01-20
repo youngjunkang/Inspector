@@ -1,10 +1,6 @@
 #ifndef   __MODBUS_H__
 #define   __MODBUS_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "main.h"
 
 #ifdef __MODBUS_C__
@@ -13,22 +9,47 @@ extern "C" {
 	#define MODBUS_EXT extern
 #endif
 
-typedef struct ModbusMaster_t
+#define MODBUS_PDU_SIZE         (253)
+
+#define INPUT_REG_COUNT    (1)
+#define HOLDING_REG_COUNT  (6000)
+
+#define INPUT_REG_BASE_ADDR_BASE    (30001)
+#define INPUT_REG_BASE_ADDR_END     (INPUT_REG_BASE_ADDR_BASE + INPUT_REG_COUNT)
+
+#define HOLDING_REG_BASE_ADDR_BASE  (0)
+#define HOLDING_REG_BASE_ADDR_END   (HOLDING_REG_BASE_ADDR_BASE + HOLDING_REG_COUNT)
+
+typedef enum FuncCode_t
 {
-	void (*WriteBytes)(uint8_t*,uint8_t);
-	uint8_t (*readByte)(void);
-	uint8_t (*isRxBusy)(void);
-	uint8_t (*getSize)(void);
-}ModbusMaster_t;
+FuncCode_ReadDiscreteInputs         = 2,
+FuncCode_ReadCoils                  = 1,
+FuncCode_WriteSingleCoil            = 5,
+FuncCode_WriteMultipleCoils         = 15,
+FuncCode_ReadInputRegisters         = 4,
+FuncCode_ReadHoldingRegisters       = 3,
+FuncCode_WriteSingleRegister        = 6,
+FuncCode_WriteMultipleRegisters     = 16,
+FuncCode_ReadWriteMultipleRegisters = 23,
+}FuncCode_t;
 
-MODBUS_EXT ModbusMaster_t ModbusMaster;
+typedef enum ExceptionCode_t
+{
+ILLEGAL_FUNCTION = 1,
+ILLEGAL_DATA_ADDRESS = 2,
+ILLEGAL_DATA_VALUE = 3,
+SLAVE_DEVICE_FAILURE = 4,
+ACKNOWLEDGE = 5,
+SLAVE_DEVICE_BUSY = 6,
+MEMORY_PARITY_ERROR = 8,
+GATEWAY_PATH_UNAVAILABLE = 0x0A,
+GATEWAY_TARGET_DEVICE_FAILED_TO_RESPOND = 0x0B,
+}ExceptionCode_t;
 
-MODBUS_EXT uint8_t MODBUS_Master_Init(void);
-MODBUS_EXT uint8_t MODBUS_Master_ReadHodingRegisters(uint16_t id, uint16_t addr, uint16_t *data,uint8_t size);
-MODBUS_EXT uint8_t MODBUS_Master_WriteMultipleRegisters(uint16_t id, uint16_t addr, uint16_t* data, uint8_t size);
-MODBUS_EXT uint8_t MODBUS_Master_ReadHoldingRegistersOverSize(uint16_t id, uint16_t addr, uint16_t *data,uint16_t size);
-#ifdef __cplusplus
-}
-#endif
+MODBUS_EXT void ModbusSlave_Init(void);
+MODBUS_EXT uint8_t ModbusSlave_RequestProcessing(uint8_t *buffer);
 
+MODBUS_EXT void (*ModbusSlave_UpdateInputRegister)  (uint16_t *buffer);
+MODBUS_EXT void (*ModbusSlave_UpdateHoldingRegister)(uint16_t *buffer);
+MODBUS_EXT uint8_t   (*ModbusSlave_WriteHoldingRegister) (uint16_t *buffer,uint16_t addr);
 #endif

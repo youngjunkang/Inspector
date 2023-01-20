@@ -15,21 +15,29 @@ extern "C" {
 
 #pragma pack(push,1)
 
-typedef struct AppSystemInfo_t
+typedef union AppSystemInfo_t
 {
+	struct
+	{
 	uint8_t serialNum[14];
 	uint8_t modelName[14];
 	uint8_t adminName[14];
 	uint8_t groupName[14];
+	};
+	uint16_t word[1000];
 }AppSystemInfo_t;
 
-typedef struct AppUtilRate_t
+typedef union AppUtilRate_t
 {
+	struct
+	{
 	uint16_t cpuUsage;
 	uint16_t memoryUsage;
 	uint16_t diskUsage;
 	uint16_t totalCpu;
 	float	 totalMemory;
+	};
+	uint16_t word[1000];
 }AppUtilRate_t;
 
 typedef struct AppNetworkVal_t
@@ -38,10 +46,14 @@ typedef struct AppNetworkVal_t
 	uint8_t ip[18];
 }AppNetworkVal_t;
 
-typedef struct AppNetworkInfo_t
+typedef union AppNetworkInfo_t
 {
+	struct
+	{
 	uint16_t itemCount;
 	AppNetworkVal_t net[8];
+	};
+	uint16_t word[1000];
 }AppNetworkInfo_t;
 
 typedef struct AppStorageVal_t
@@ -50,10 +62,14 @@ typedef struct AppStorageVal_t
 	uint16_t usage;
 }AppStorageVal_t;
 
-typedef struct AppStorageInfo_t
+typedef union AppStorageInfo_t
 {
+	struct
+	{
 	uint16_t itemCount;
 	AppStorageVal_t drive[6];
+	};
+	uint16_t word[1000];
 }AppStorageInfo_t;
 
 typedef struct AppProcessVal_t
@@ -62,20 +78,29 @@ typedef struct AppProcessVal_t
 	uint16_t usage;
 }AppProcessVal_t;
 
-typedef struct AppProcessInfo_t
+typedef union AppProcessInfo_t
 {
+	struct
+	{
 	uint16_t itemCount;
 	uint16_t cpuUsage;
 	AppProcessVal_t val[8];
+	};
+	uint16_t word[1000];
 }AppProcessInfo_t;
 
-typedef struct AppData_t
+typedef union AppData_t
 {
+	struct
+	{
+	uint16_t	rsvd[1000];
 	AppSystemInfo_t sysInfo;
 	AppUtilRate_t utilRate;
 	AppNetworkInfo_t netInfo;
 	AppStorageInfo_t storage;
 	AppProcessInfo_t process;
+	};
+	uint16_t word[6000];
 }AppData_t;
 
 /******************************************************************/
