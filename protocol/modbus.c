@@ -156,7 +156,7 @@ static uint8_t WriteMultipleRegisters(uint8_t* buffer)
     
     for(int i=addr; i < addr+size; i++)
     {
-        if(ModbusSlave_WriteHoldingRegister(HoldingReg,addr) == false)
+        if(ModbusSlave_WriteHoldingRegister(HoldingReg,i) == false)
             return MakeExceptionPacket( buffer, ILLEGAL_DATA_VALUE);
     }
 
