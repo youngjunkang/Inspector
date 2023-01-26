@@ -35,7 +35,7 @@ typedef union AppUtilRate_t
 	uint16_t memoryUsage;
 	uint16_t diskUsage;
 	uint16_t totalCpu;
-	float	 totalMemory;
+	uint8_t	 totalMemory[5];
 	};
 	uint16_t word[1000];
 }AppUtilRate_t;

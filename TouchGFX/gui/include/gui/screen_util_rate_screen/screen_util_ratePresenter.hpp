@@ -31,7 +31,7 @@ public:
     virtual void UtilRate_SetMemoryUsage(int val);
     virtual void UtilRate_SetDiskUsage(int val);
     virtual void UtilRate_SetTotalCpuCore(int val);
-    virtual void UtilRate_SetTotalMemory(float val);
+    virtual void UtilRate_SetTotalMemory(char* str);
 private:
     screen_util_ratePresenter();
 

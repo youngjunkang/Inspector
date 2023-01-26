@@ -37,7 +37,7 @@ void screen_util_ratePresenter::UtilRate_SetTotalCpuCore(int val)
 	view.SetTotalCpuCore(val);
 }
 
-void screen_util_ratePresenter::UtilRate_SetTotalMemory(float val)
+void screen_util_ratePresenter::UtilRate_SetTotalMemory(char* str)
 {
-	view.SetTotalMemory(val);
+	view.SetTotalMemory(str);
 }

@@ -16,7 +16,7 @@ public:
     void SetMemoryUsage(uint8_t val);
     void SetDiskUsage(uint8_t val);
     void SetTotalCpuCore(uint8_t val);
-    void SetTotalMemory(float val);
+    void SetTotalMemory(char* str);
 protected:
 };
 

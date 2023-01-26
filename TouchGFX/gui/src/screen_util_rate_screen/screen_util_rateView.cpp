@@ -45,12 +45,12 @@ void screen_util_rateView::SetTotalCpuCore(uint8_t val)
 	textArea_Core_Count.invalidate();
 }
 
-void screen_util_rateView::SetTotalMemory(float val)
+void screen_util_rateView::SetTotalMemory(char* str)
 {
-	//char str[20];
+	char tmp[20];
 
-	//sprintf(str,"%3.1f",val);
-	//Unicode::fromUTF8((const uint8_t*)str, textArea_total_memoryBuffer, TEXTAREA_TOTAL_MEMORY_SIZE);
-	Unicode::snprintfFloat(textArea_total_memoryBuffer, TEXTAREA_TOTAL_MEMORY_SIZE, "%3.1f", val);
+	sprintf(tmp,"%s",str);
+	Unicode::fromUTF8((const uint8_t*)tmp, textArea_total_memoryBuffer, TEXTAREA_TOTAL_MEMORY_SIZE);
+	//Unicode::snprintfFloat(textArea_total_memoryBuffer, TEXTAREA_TOTAL_MEMORY_SIZE, "%3.1f", val);
 	textArea_total_memory.invalidate();
 }

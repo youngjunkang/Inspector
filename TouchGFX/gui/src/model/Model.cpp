@@ -59,7 +59,7 @@ void Model::tick()
 	modelListener->UtilRate_SetMemoryUsage(utilRate->memoryUsage);
 	modelListener->UtilRate_SetDiskUsage(utilRate->diskUsage);
 	modelListener->UtilRate_SetTotalCpuCore(utilRate->totalCpu);
-	modelListener->UtilRate_SetTotalMemory(utilRate->totalMemory);
+	modelListener->UtilRate_SetTotalMemory((char*)utilRate->totalMemory);
 
 	modelListener->Network_SetListMax(netInfo->itemCount);
 	for(char i=0; i<netInfo->itemCount; i++)
@@ -92,7 +92,7 @@ static void CheckDataRange(void)
 	if(utilRate->memoryUsage > 100) utilRate->memoryUsage = 100;
 	if(utilRate->diskUsage > 100) 	utilRate->diskUsage = 100;
 	if(utilRate->totalCpu > 99) 	utilRate->totalCpu = 99;
-	if(utilRate->totalMemory > 99) utilRate->totalMemory = 99.f;
+	utilRate->totalMemory[4] = 0;
 
 	if(netInfo->itemCount > 8) netInfo->itemCount = 8;
 	for(char i=0; i<netInfo->itemCount; i++)
